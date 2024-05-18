@@ -4,10 +4,11 @@ import folium
 import requests
 import random
 import webbrowser
-from streamlit_folium import folium_static
 import base64
 from PIL import Image
 import os
+import folium
+import streamlit.components.v1 as components
 
 # Using XAV Type Face
 
@@ -98,6 +99,7 @@ def color_country_map(country_names):
     ).add_to(world_map)
 
     return world_map
+
 
 
 #-------------------------------------------------------------- MAIN PAGE -------------------------------------------------------------------
@@ -202,7 +204,10 @@ def page_about():
         countries = list(set(df["Country"].to_list()))
         countries.remove("Vortex")
         map = color_country_map(countries)
-        folium_static(map)
+        map.save("map.html")
+        with open("map.html", "r") as f:
+            folium_map = f.read()
+        components.html(folium_map, height=500)
 
      
     # Function to execute algorithm for Option "X Series"
@@ -210,14 +215,20 @@ def page_about():
         gf = df[df["Serie"]=="X Series"]
         countries = list(set(gf["Country"].to_list()))
         map = color_country_map(countries)
-        folium_static(map)
+        map.save("map.html")
+        with open("map.html", "r") as f:
+            folium_map = f.read()
+        components.html(folium_map, height=500)
 
     # Function to execute algorithm for Option "A Series"
     def algorithm_option3():
         gf = df[df["Serie"] == "A Series"]
         countries = list(set(gf["Country"].to_list()))
         map = color_country_map(countries)
-        folium_static(map)
+        map.save("map.html")
+        with open("map.html", "r") as f:
+            folium_map = f.read()
+        components.html(folium_map, height=500)
 
     # Function to execute algorithm for Option "V Series"
     def algorithm_option4():
@@ -227,7 +238,11 @@ def page_about():
         countries = list(set(gf["Country"].to_list()))
         countries.remove("Vortex")
         map = color_country_map(countries)
-        folium_static(map)
+        map.save("map.html")
+        with open("map.html", "r") as f:
+            folium_map = f.read()
+        components.html(folium_map, height=500)
+
         st.write("<br>", unsafe_allow_html=True)
         st.markdown("<h3><div style='font-family: xav semibold; direction: rtl;'></div>", unsafe_allow_html=True)
 
