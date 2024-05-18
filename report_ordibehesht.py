@@ -20,7 +20,7 @@ def load_black():
     st.write('<style>{}</style>'.format(css), unsafe_allow_html=True)
 
 def load_bold():
-    font_file_path = "/Users/mohammad/Library/Fonts.ttf"
+    font_file_path = "/Users/mohammad/Library/Fonts/xav semibold.ttf"
     with open(font_file_path, "rb") as font_file:
         font_data = font_file.read()
     encoded_font = base64.b64encode(font_data).decode("utf-8")
