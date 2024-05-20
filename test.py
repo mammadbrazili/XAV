@@ -1,26 +1,30 @@
 import streamlit as st
-import folium
-import streamlit.components.v1 as components
+import matplotlib.pyplot as plt
 
-def main():
-    # Set up your Streamlit app title
-    st.title("Folium Map in Streamlit")
+def plot(df,metric):
+    # Sample data
+    categories = df.index
+    values = df[metric].to_list()
 
-    # Create a Folium map
-    m = folium.Map(location=[40.7128, -74.0060], zoom_start=10)
+    # Create a figure and axis
+    fig, ax = plt.subplots()
 
-    # Add markers, polygons, or other layers to your Folium map if needed
-    folium.Marker([40.7128, -74.0060], popup="New York City").add_to(m)
+    # Create a bar chart
+    bars = ax.bar(categories, values)
 
-    # Save the Folium map to an HTML file
-    m.save("map.html")
+    # Set the colors of the bars
+    for bar in bars:
+        bar.set_color('#3498db')  # Sharp blue color
 
-    # Read the HTML file and display it in the Streamlit app
-    with open("map.html", "r") as f:
-        folium_map = f.read()
+    # Set the title and labels
+    ax.set_title('Bar Chart Example')
+    ax.set_xlabel('Categories') 
+    ax.set_ylabel('Values')
 
-    # Display the Folium map in Streamlit using components.html
-    components.html(folium_map, height=500)
+    # Show the exact values on top of each bar
+    for bar in bars:
+        height = bar.get_height()
+        ax.text(bar.get_x() + bar.get_width()/2, height, f'{height}', ha='center', va='bottom')
 
-if __name__ == "__main__":
-    main()
+    # Show the plot in Streamlit
+    st.pyplot(fig)

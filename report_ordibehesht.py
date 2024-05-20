@@ -281,87 +281,293 @@ def page_contact():
 
     st.markdown("<h4 style='text-align: right; font-family: xav semibold; direction: rtl;'>تعداد سورتر</h4>", unsafe_allow_html=True)
     input1 = st.slider("", 0, 30, 10, step=1)
-    st.markdown("<h4 style='text-align: right; font-family: xav semibold; direction: rtl;'>میانگین سورت در هر روز </h4>", unsafe_allow_html=True)
-    input2 = st.slider(" ", 10, 100, 40)
-    capacity_1 = input1*input2* 25
-    st.metric(label="", value=capacity_1)
-
-
-    # Possibility 2: 2 float inputs
-    st.markdown("<h3 style='text-align: center; font-family: xav semibold;'>فقط سورت ماشینی</h3>", unsafe_allow_html=True)
-
-    st.markdown("<h4 style='text-align: right; font-family: xav semibold; direction: rtl;'> ظرفیت دسگاه سورت جدید در روز</h4>", unsafe_allow_html=True)
-    input3 = st.slider("", 100, 1100, 150)
-    capacity_1 = input3* 25
-    st.metric(label="", value=capacity_1)
-
-    # Possibility 3: 4 float inputs
-    st.markdown("<h3 style='text-align: center; font-family: xav semibold;'> دستگاه سورت  +  سورت دستی</h3>", unsafe_allow_html=True)
-    st.markdown("<h4 style='text-align: right; font-family: xav semibold; direction: rtl;'>تعداد سورتر</h4>", unsafe_allow_html=True)
-    input1 = st.slider("         ", 0, 30, 10, step=1)
-    st.markdown("<h4 style='text-align: right; font-family: xav semibold; direction: rtl;'>میانگین سورت در هر روز </h4>", unsafe_allow_html=True)
-    input2 = st.slider("    ", 10, 100, 40)
-    st.markdown("<h4 style='text-align: right; font-family: xav semibold; direction: rtl;'> ظرفیت دسگاه سورت جدید در روز</h4>", unsafe_allow_html=True)
-    input3 = st.slider("                     ", 100, 1100, 150)
-    capacity_1 = input3* 25 + (input1*input2* 25)
-    st.metric(label="", value=capacity_1)
-
-
     st.markdown("<h1 style='text-align: center; font-family: xav semibold;'> وضعیت فعلی</h3>", unsafe_allow_html=True)
 
 
 #-------------------------------------------------------------- COST PAGE -------------------------------------------------------------------
 def cost_page():
 
-        # check
-        # Add options in the sidebar
-    option = st.sidebar.selectbox(
-        '',
-        ('برحسب سری', 'برحسب خاسنگاه')
-)
-    if option == 'برحسب سری':
-        st.markdown('<h1 style="text-align: center;">Flags</h1>', unsafe_allow_html=True)
-        st.markdown('<hr>', unsafe_allow_html=True)
+    dataset = pd.read_excel("/Users/mohammad/Dropbox/XAV Finance (1)/گزارشات/1403/اردیبهشت/اطلاعات قهوه.xlsx").iloc[:26]
+    #--------------------------------------------------------- Functions Defining ---------------------------------------------------------------
+    total_roast = sum(dataset["each_line_sum"].to_list())
 
-    else:
-        st.markdown("<h1 style='text-align: center; font-family: xav semibold;'> میزان بهای از دست رفته </h3>", unsafe_allow_html=True)
-        st.write("----------------------------------------------------------------------------------------")
-        # Your DataFrame
-        data = {
-            0: ['Peru', 'El Salvador', 'Ethiopia', 'Brazil', 'Costa Rica', 'Honduras', 'Colombia', 'Kenya', 'Rwanda', 'Panama', 'Guatemala'],
-            1: [0.8562, 0.8488, 0.8669, 0.8624, 0.8603, 0.8596, 0.8463, 0.8555, 0.8549, 0.8628, 0.8575]
-        }
+    def filter(Metric):
 
-        # Convert the dictionary to a DataFrame
-        df = pd.DataFrame(data).rename(columns={0: 'Country', 1: 'Value'})
+        series_dict = {}
+        for i in set(dataset[Metric].to_list()):
+            gf = dataset[dataset[Metric] == i]
+            total_kg = sum(gf["each_line_sum"] .to_list())
+            total_share = total_kg / total_roast
+            gb_roast_defect_rate = np.mean(gf["gb_roast_defect_rate"].to_list())
+            gb_roast_baha = np.mean(gf["gb_roast_baha"].to_list())
+            roast_sort1_defect_rate = np.mean(gf["roast_sort1_defect_rate"].to_list())
+            roast_sort1_baha = np.mean(gf["roast_sort1_baha"].to_list())
+            sort1_sort2_defect_rate = np.mean(gf["sort1_sort2_defect_rate"].to_list())
+            sort1_sort2_baha = np.mean(gf["sort1_sort2_baha"].to_list())
+            gb_pack_defect_rate = np.mean(gf["gb_pack_defect_rate"].to_list())
+            gb_pack_baha = np.mean(gf["gb_pack_baha"].to_list())
+            roasted =  np.mean(gf["Roasted"].to_list())
+            sorted =  np.mean(gf["Sorted"].to_list())
+            sorted_2 =  np.mean(gf["Sorted2"].to_list())
 
-        # Sort the DataFrame by the 'Value' column in descending order
-        sorted_df = df.sort_values(by='Value', ascending=False)
+            line = len(gf)
+
+            series_dict[i] = [line,total_kg,total_share,gb_roast_defect_rate,gb_roast_baha,roast_sort1_defect_rate,roast_sort1_baha,
+                            sort1_sort2_defect_rate,sort1_sort2_baha,gb_pack_defect_rate,gb_pack_baha,roasted,sorted,sorted_2]
+
+            final = pd.DataFrame(series_dict).T
+            final.columns = ['lines', 'Total_GB', 'Share_of_Total', '‌GB_to_Roast', 'GB_Roast_Baha', 'Roast_Sort1',
+                'Roast_Sort1_Baha', 'Sort1_Sort2', 'Sort1_Sort2_baha', 'GB_Final', 'GB_Final_Baha',"roasted","sorted","sorted_2"]
+
+        return final
 
 
-        # Create a dictionary mapping country names to their flag filenames
-        flag_mapping = {
-            'Peru': '/Users/mohammad/XAV/Departemant Financial/Report Esfand Farvardin/flags/Peru.png',
-            'El Salvador': '/Users/mohammad/XAV/Departemant Financial/Report Esfand Farvardin/flags/El Salvador.png',
-            'Ethiopia': '/Users/mohammad/XAV/Departemant Financial/Report Esfand Farvardin/flags/Ethiopia.png',
-            'Brazil': '/Users/mohammad/XAV/Departemant Financial/Report Esfand Farvardin/flags/Brazil.png',
-            'Costa Rica': '/Users/mohammad/XAV/Departemant Financial/Report Esfand Farvardin/flags/Costa Rica.png',
-            'Honduras': '/Users/mohammad/XAV/Departemant Financial/Report Esfand Farvardin/flags/Honduras.png',
-            'Colombia': '/Users/mohammad/XAV/Departemant Financial/Report Esfand Farvardin/flags/Colombia.png',
-            'Kenya': '/Users/mohammad/XAV/Departemant Financial/Report Esfand Farvardin/flags/Kenya.png',
-            'Rwanda': '/Users/mohammad/XAV/Departemant Financial/Report Esfand Farvardin/flags/Rwanda.png',
-            'Panama': '/Users/mohammad/XAV/Departemant Financial/Report Esfand Farvardin/flags/Panama.png',
-            'Guatemala': '/Users/mohammad/XAV/Departemant Financial/Report Esfand Farvardin/flags/Guatemala.png'
-        }
 
-        # Replace country names with flag filenames
-        sorted_df['Country'] = sorted_df['Country'].map(flag_mapping)
+    import streamlit as st
+    import matplotlib.pyplot as plt
+    import random
 
-        # Display the DataFrame with flag images in your Streamlit app
-        for index, row in sorted_df.iterrows():
-            st.image(row['Country'], width=100)
-            st.markdown('<h2 class="right">{}</h2>'.format(round(1 - (row['Value']*0.92*0.97),3)), unsafe_allow_html=True)
-            st.write("----------------------------------------------------------------------------------------")
+    import streamlit as st
+    import matplotlib.pyplot as plt
+    import random
+
+    def plot(df, metric):
+        # Sample data
+        categories = df.index
+        values = df[metric].to_list()
+
+        # Create a figure and axis with a bigger size
+        fig, ax = plt.subplots(figsize=(60, 48))
+
+        # Create a bar chart
+        bars = ax.bar(categories, values)
+
+        # Set the colors of the bars randomly from a larger palette
+        colors = ['#ADD8E6', '#CCCCFF', '#D8BFD8', '#E6E6FA', '#87CEEB', '#B0C4DE', '#9370DB', '#8470FF', '#BA55D3', '#DA70D6',
+                '#00BFFF', '#1E90FF', '#6495ED', '#7B68EE', '#4169E1', '#0000FF', '#4682B4', '#00CED1', '#00FFFF', '#00FA9A']
+        for bar, color in zip(bars, random.choices(colors, k=len(bars))):
+            bar.set_color(color)
+
+
+        # Rotate the x-axis labels for better readability
+        plt.xticks(rotation=45, ha='right', fontsize=50)
+        ax.tick_params(axis='y', labelsize=50)
+
+        # Show the exact values on top of each bar
+        for bar in bars:
+            height = bar.get_height()
+            ax.text(bar.get_x() + bar.get_width()/2, height, f'{round(height,3)} ', ha='center', va='bottom', fontsize=45)
+
+        # Show the plot in Streamlit
+        st.pyplot(fig)
+
+
+
+    import plotly.graph_objects as go
+
+    def funnel(level_data,string):
+
+        # Define colors for each level
+        level_colors = ['#FF5733', '#33FF57', '#5733FF', '#33FFC0', '#FF33C0']
+
+
+        # Create the funnel chart using go.Funnel
+        fig = go.Figure(go.Funnel(
+            y=list(level_data.keys()),
+            x=list(level_data.values()),
+            textinfo="value",
+            marker={"color": level_colors}
+        ))
+
+        # Update layout to make the plot bigger and display values
+        fig.update_layout(width=600, height=600, bargap=0.1)
+        fig.update_traces(textposition="inside")
+        fig.update_layout(
+        title={
+            'text': f"{string}",
+            'y': 0.95,
+            'x': 0.5,
+            'xanchor': 'center',
+            'yanchor': 'top'
+        },
+        title_font=dict(
+            size=14,
+            color='blue',
+            family='Arial'
+        )
+    )
+
+
+        # Show the plot
+        st.plotly_chart(fig)
+
+
+
+
+
+
+
+
+    def main():
+        st.title(" ")
+
+        # Main options
+        main_options = ["لاین", "سری", "خاستگاه", "رقم", "فرآوری"]
+        selected_main_option = st.selectbox(" ", main_options)
+        sub_options = ["line",'Total_GB', 'Share_of_Total', 'Defect Rates', "Cost"]
+        selected_sub_option = st.selectbox("", sub_options)
+
+
+        # Sub-options based on the selected main option
+        #---------------------------------------
+        if selected_main_option == "لاین":
+            df = filter("Name")
+
+            if selected_sub_option == "Total_GB":
+                plot(df,"Total_GB")
+
+
+            elif selected_sub_option == "Share_of_Total":
+                plot(df,"Share_of_Total")
+
+            elif selected_sub_option ==  "Defect Rates":
+                for i in df.index.to_list():
+                    data_dict = {"GB_Roast" : df.loc[i,"‌GB_to_Roast"] ,  "Roast_Sort1" : df.loc[i,"Roast_Sort1"] , "Sort1_Sort2" : df.loc[i,"Sort1_Sort2"] ,
+                                "GB_Final" : df.loc[i,"GB_Final"] }
+                    funnel(data_dict,i)
+
+            elif selected_sub_option ==  "Cost":
+                for i in df.index.to_list():
+                    data_dict = {"GB_Roast" : (100/(df.loc[i,"‌GB_to_Roast"]))-100 ,  "Roast_Sort1" : (100/(df.loc[i,"Roast_Sort1"]))-100 ,
+                                "Sort1_Sort2" : (100/(df.loc[i,"Sort1_Sort2"]))-100 ,
+                                "GB_Final" : (100/ (df.loc[i,"GB_Final"]))-100 }
+                    funnel(data_dict,i)
+
+
+
+    #---------------------------------------
+        elif selected_main_option == "سری":
+            sub_options = ["line",'Total_GB', 'Share_of_Total', 'Defect Rates', "Cost"]
+
+            df = filter("Series")
+
+            if selected_sub_option == "line":
+                plot(df,"lines")
+
+            elif selected_sub_option == "Total_GB":
+                plot(df,"Total_GB")
+
+            elif selected_sub_option == "Share_of_Total":
+                plot(df,"Share_of_Total")
+
+
+            elif selected_sub_option ==  "Defect Rates":
+                for i in df.index.to_list():
+                    data_dict = {"GB_Roast" : df.loc[i,"‌GB_to_Roast"] ,  "Roast_Sort1" : df.loc[i,"Roast_Sort1"] , "Sort1_Sort2" : df.loc[i,"Sort1_Sort2"] ,
+                                "GB_Final" : df.loc[i,"GB_Final"] }
+                    funnel(data_dict,i)
+
+            elif selected_sub_option ==  "Cost":
+                for i in df.index.to_list():
+                    data_dict = {"GB_Roast" : (100/(df.loc[i,"‌GB_to_Roast"]))-100 ,  "Roast_Sort1" : (100/(df.loc[i,"Roast_Sort1"]))-100 ,
+                                "Sort1_Sort2" : (100/(df.loc[i,"Sort1_Sort2"]))-100 ,
+                                "GB_Final" : (100/ (df.loc[i,"GB_Final"]))-100 }
+                    funnel(data_dict,i)
+
+    #---------------------------------------
+
+        elif selected_main_option == "خاستگاه":
+            sub_options = ["line",'Total_GB', 'Share_of_Total', 'Defect Rates', "Cost"]
+            df = filter("Country")
+            
+            if selected_sub_option == "line":
+                plot(df,"lines")
+
+            elif selected_sub_option == "Total_GB":
+                plot(df,"Total_GB")
+
+            elif selected_sub_option == "Share_of_Total":
+                plot(df,"Share_of_Total")
+
+
+            elif selected_sub_option ==  "Defect Rates":
+                for i in df.index.to_list():
+                    data_dict = {"GB_Roast" : df.loc[i,"‌GB_to_Roast"] ,  "Roast_Sort1" : df.loc[i,"Roast_Sort1"] , "Sort1_Sort2" : df.loc[i,"Sort1_Sort2"] ,
+                                "GB_Final" : df.loc[i,"GB_Final"] }
+                    funnel(data_dict,i)
+
+            elif selected_sub_option ==  "Cost":
+                for i in df.index.to_list():
+                    data_dict = {"GB_Roast" : (100/(df.loc[i,"‌GB_to_Roast"]))-100 ,  "Roast_Sort1" : (100/(df.loc[i,"Roast_Sort1"]))-100 ,
+                                "Sort1_Sort2" : (100/(df.loc[i,"Sort1_Sort2"]))-100 ,
+                                "GB_Final" : (100/ (df.loc[i,"GB_Final"]))-100 }
+                    funnel(data_dict,i)
+
+
+    #---------------------------------------
+
+        elif selected_main_option == "رقم":
+            df = filter("Variety")
+            sub_options = ["line",'Total_GB', 'Share_of_Total', 'Defect Rates', "Cost"]
+
+            if selected_sub_option == "line":
+                plot(df,"lines")
+
+            elif selected_sub_option == "Total_GB":
+                plot(df,"Total_GB")
+
+            elif selected_sub_option == "Share_of_Total":
+                plot(df,"Share_of_Total")
+
+            elif selected_sub_option ==  "Defect Rates":
+                for i in df.index.to_list():
+                    data_dict = {"GB_Roast" : df.loc[i,"‌GB_to_Roast"] ,  "Roast_Sort1" : df.loc[i,"Roast_Sort1"] , "Sort1_Sort2" : df.loc[i,"Sort1_Sort2"] ,
+                                "GB_Final" : df.loc[i,"GB_Final"] }
+                    funnel(data_dict,i)
+
+            elif selected_sub_option ==  "Cost":
+                for i in df.index.to_list():
+                    data_dict = {"GB_Roast" : (100/(df.loc[i,"‌GB_to_Roast"]))-100 ,  "Roast_Sort1" : (100/(df.loc[i,"Roast_Sort1"]))-100 ,
+                                "Sort1_Sort2" : (100/(df.loc[i,"Sort1_Sort2"]))-100 ,
+                                "GB_Final" : (100/ (df.loc[i,"GB_Final"]))-100 }
+                    funnel(data_dict,i)
+
+
+
+
+    #---------------------------------------
+
+        elif selected_main_option == "فرآوری":
+            df = filter("Proccess")
+
+            sub_options = ["line",'Total_GB', 'Share_of_Total', 'Defect Rates', "Cost"]
+
+            if selected_sub_option == "line":
+                plot(df,"lines")
+
+            elif selected_sub_option == "Total_GB":
+                plot(df,"Total_GB")
+
+            elif selected_sub_option == "Share_of_Total":
+                plot(df,"Share_of_Total")
+
+
+            elif selected_sub_option ==  "Defect Rates":
+                for i in df.index.to_list():
+                    data_dict = {"GB_Roast" : df.loc[i,"‌GB_to_Roast"] ,  "Roast_Sort1" : df.loc[i,"Roast_Sort1"] , "Sort1_Sort2" : df.loc[i,"Sort1_Sort2"] ,
+                                "GB_Final" : df.loc[i,"GB_Final"] }
+                    funnel(data_dict,i)
+
+            elif selected_sub_option ==  "Cost":
+                for i in df.index.to_list():
+                    data_dict = {"GB_Roast" : (100/(df.loc[i,"‌GB_to_Roast"]))-100 ,  "Roast_Sort1" : (100/(df.loc[i,"Roast_Sort1"]))-100 ,
+                                "Sort1_Sort2" : (100/(df.loc[i,"Sort1_Sort2"]))-100 ,
+                                "GB_Final" : (100/ (df.loc[i,"GB_Final"]))-100 }
+                    funnel(data_dict,i)
+
+
+    # -------------------------------------------------------
+
 
 
 #-------------------------------------------------------------- Setting of PAGE -------------------------------------------------------------------
