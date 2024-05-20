@@ -8,6 +8,7 @@ import base64
 from PIL import Image
 import os
 import folium
+import numpy as np
 import streamlit.components.v1 as components
 
 # Using XAV Type Face
