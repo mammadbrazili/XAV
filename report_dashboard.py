@@ -5,6 +5,8 @@ from bokeh.plotting import figure, show, output_notebook
 from bokeh.models import ColumnDataSource, Label
 import random
 import os 
+import plotly.express as px
+
 
 relative_path = '~/Dropbox/XAV coffee works/XAV Revenue/Excels/1403/بهار 1403/01 - فروردین/سفارشات کالا فروردین 1403.xlsx'
 full_path_1 = os.path.expanduser(relative_path)
@@ -63,21 +65,21 @@ def filter_and_clean_dataframe(df, date_list):
     return span_df
 
 # Function to plot data
-def plot_data(dict1, string):
+def plot_data(dict1, title):
     x = list(dict1.keys())
     y = list(dict1.values())
     colors = ["#" + ''.join([random.choice('0123456789ABCDEF') for _ in range(6)]) for _ in range(len(x))]
-    source = ColumnDataSource(data=dict(x=x, y=y, color=colors))
-    p = figure(x_range=x, height=600, width=1000, title=f"Each {string} Sale This Week", toolbar_location=None, tools="")
-    p.vbar(x='x', top='y', width=0.5, source=source, color="color")
-    p.xgrid.grid_line_color = None
-    p.y_range.start = 0
-    p.xaxis.major_label_orientation = 45
-    x_offset = 40 if len(x) > 9 else [350, 220, 70, 110, 85, 70, 40, 55, 40][len(x) - 1]
-    for i, value in enumerate(y):
-        label = Label(x=i, y=value, text=str(round(value, 2)), text_baseline='middle', text_align='center', text_font_size="8pt", x_offset=x_offset, y_offset=10)
-        p.add_layout(label)
-    return p
+    
+    fig = px.bar(
+        x=x,
+        y=y,
+        labels={'x': 'Category', 'y': 'Value (kg)'},
+        title=title,
+        color_discrete_sequence=colors
+    )
+    
+    fig.update_layout(xaxis_tickangle=-45)
+    st.plotly_chart(fig)
 
 # Streamlit app
 def main():
@@ -137,12 +139,12 @@ def main():
         plot_dict = {"X Series": x_series_sale, "A Series": a_series_sale, "V Series": v_series_sale, "Total": total_sale}
 
         # Displaying plots
-        st.bokeh_chart(plot_data(plot_dict, "Series"))
-        st.bokeh_chart(plot_data(v_dict, "V Series"))
-        st.bokeh_chart(plot_data(a_dict, "A Series"))
-        st.bokeh_chart(plot_data(x_dict, "X Series"))
-        st.bokeh_chart(plot_data(top_cafe_dict, "Cafe"))
-        st.bokeh_chart(plot_data(top_city_dict, "City"))
+        plot_data(plot_dict, "Total Series Sale")
+        plot_data(v_dict, "V Series Sale")
+        plot_data(a_dict, "A Series Sale")
+        plot_data(x_dict, "X Series Sale")
+        plot_data(top_cafe_dict, "Top Cafes Sale")
+        plot_data(top_city_dict, "Top Cities Sale")
 
 if __name__ == "__main__":
     main()
