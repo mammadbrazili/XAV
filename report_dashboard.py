@@ -5,7 +5,7 @@ import streamlit as st
 # from bokeh.models import ColumnDataSource, Label
 import random
 import os 
-import plotly.express as px
+# import plotly.express as px
 
 
 relative_path = '~/Dropbox/XAV coffee works/XAV Revenue/Excels/1403/بهار 1403/01 - فروردین/سفارشات کالا فروردین 1403.xlsx'
@@ -65,21 +65,25 @@ def filter_and_clean_dataframe(df, date_list):
     return span_df
 
 # Function to plot data
-def plot_data(dict1, title):
-    x = list(dict1.keys())
-    y = list(dict1.values())
+# Function to plot data using Matplotlib
+def plot_data(data_dict, title):
+    x = list(data_dict.keys())
+    y = list(data_dict.values())
     colors = ["#" + ''.join([random.choice('0123456789ABCDEF') for _ in range(6)]) for _ in range(len(x))]
-    
-    fig = px.bar(
-        x=x,
-        y=y,
-        labels={'x': 'Category', 'y': 'Value (kg)'},
-        title=title,
-        color_discrete_sequence=colors
-    )
-    
-    fig.update_layout(xaxis_tickangle=-45)
-    st.plotly_chart(fig)
+
+    fig, ax = plt.subplots(figsize=(10, 6))
+    bars = ax.bar(x, y, color=colors)
+    ax.set_title(title)
+    ax.set_xlabel('Category')
+    ax.set_ylabel('Value (kg)')
+    plt.xticks(rotation=45, ha='right')
+
+    # Adding value labels on top of the bars
+    for bar in bars:
+        yval = bar.get_height()
+        plt.text(bar.get_x() + bar.get_width()/2, yval, round(yval, 2), ha='center', va='bottom')
+
+    st.pyplot(fig)
 
 # Streamlit app
 def main():
