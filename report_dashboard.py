@@ -5,6 +5,7 @@ import streamlit as st
 # from bokeh.models import ColumnDataSource, Label
 import random
 import os 
+import matplotlib.pyplot as plt
 # import plotly.express as px
 
 
