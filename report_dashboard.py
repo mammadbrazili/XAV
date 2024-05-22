@@ -1,8 +1,8 @@
 import streamlit as st
 import pandas as pd
 import streamlit as st
-from bokeh.plotting import figure, show, output_notebook
-from bokeh.models import ColumnDataSource, Label
+# from bokeh.plotting import figure, show, output_notebook
+# from bokeh.models import ColumnDataSource, Label
 import random
 import os 
 import plotly.express as px
