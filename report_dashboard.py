@@ -1,17 +1,13 @@
 import streamlit as st
 import pandas as pd
 import streamlit as st
-# from bokeh.plotting import figure, show, output_notebook
-# from bokeh.models import ColumnDataSource, Label
 import random
 import os 
-# import matplotlib.pyplot as plt
-# import plotly.express as px
 
 
-relative_path = '~/Dropbox/XAV coffee works/XAV Revenue/Excels/1403/بهار 1403/01 - فروردین/سفارشات کالا فروردین 1403.xlsx'
+relative_path = '/Users/mohammad/Dropbox/XAV coffee works/XAV Revenue/Excels/1403/بهار 1403/01 - فروردین/سفارشات کالا فروردین 1403.xlsx'
 full_path_1 = os.path.expanduser(relative_path)
-full_path_2 = os.path.expanduser("~/Dropbox/XAV coffee works/XAV Revenue/Excels/1403/بهار 1403/02 - اردیبهشت/سفارشات کالا اردیبهشت 1403.xlsx")
+full_path_2 = os.path.expanduser("/Users/mohammad/Dropbox/XAV coffee works/XAV Revenue/Excels/1403/بهار 1403/02 - اردیبهشت/سفارشات کالا اردیبهشت 1403.xlsx")
 
 
 # Function to read and concatenate excel files
