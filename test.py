@@ -2,9 +2,13 @@ import streamlit as st
 import pandas as pd
 import dropbox
 from io import BytesIO
+import json
 
+with open('token.json', 'r') as file:
+    data = json.load(file)
+print(data["token"])
 # Dropbox access token
-DROPBOX_ACCESS_TOKEN = 'sl.B16tSaMVJuMY81sQs6E0Ey5c28ko1Bd0fSVJPrZ2RlLDBCiIE9nHwWDXPtlivnVRWO-2W8vTbwRN9WUSCh-UsZcpo925K9q9nLtlyiSI4fMZkPLVU9njyl9pCG4qoKPInybF8COQet-I09zrCNs2KDk'
+DROPBOX_ACCESS_TOKEN = data['token']
 
 # Function to download the Excel file from Dropbox
 def download_excel_from_dropbox(file_path):
