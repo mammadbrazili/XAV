@@ -3,17 +3,34 @@ import pandas as pd
 import streamlit as st
 import random
 import os 
+import requests
 
+def dropbox_download(link,string):
+    # Modify the link to allow direct access
+    direct_link = link.replace("www.dropbox.com", "dl.dropboxusercontent.com").replace("?dl=0", "")
 
-relative_path = '/Users/mohammad/Dropbox/XAV coffee works/XAV Revenue/Excels/1403/بهار 1403/01 - فروردین/سفارشات کالا فروردین 1403.xlsx'
-full_path_1 = os.path.expanduser(relative_path)
-full_path_2 = os.path.expanduser("/Users/mohammad/Dropbox/XAV coffee works/XAV Revenue/Excels/1403/بهار 1403/02 - اردیبهشت/سفارشات کالا اردیبهشت 1403.xlsx")
+    # Use requests to get the content of the file
+    response = requests.get(direct_link)
 
+    # Check if the request was successful
+    if response.status_code == 200:
+        # Specify the local file name where the file will be saved
+        local_filename = f"{string}.xlsx"  # Replace with your desired file name and extension
+        
+        # Save the content to a file
+        with open(local_filename, "wb") as file:
+            file.write(response.content)
+        print(f"File downloaded successfully and saved as {local_filename}")
+    else:
+        print(f"Failed to retrieve the file. Status code: {response.status_code}")
+
+dropbox_download("https://www.dropbox.com/scl/fi/dlrfovoroyljqdketdcl9/1403.xlsx?rlkey=rk8p65pggu839rpupq39lz99z&st=cfucybw1&dl=0", "khordad")
+dropbox_download("https://www.dropbox.com/scl/fi/d1wux79gl92h9narou4xf/1403.xlsx?rlkey=sh5cljzhvpx2qcrhmln34vtwj&st=cajjrxlk&dl=0", "ordibehest")
 
 # Function to read and concatenate excel files
 def read_excel_files():
-    df1 = pd.concat(pd.read_excel(full_path_1, sheet_name=None), ignore_index=True)
-    df2 = pd.concat(pd.read_excel(full_path_2,sheet_name=None),ignore_index=True)
+    df1 = pd.concat(pd.read_excel("ordibehest.xlsx", sheet_name=None), ignore_index=True)
+    df2 = pd.concat(pd.read_excel("khordad.xlsx",sheet_name=None),ignore_index=True)
     df = pd.concat([df1, df2], ignore_index=True)
     return df
 
