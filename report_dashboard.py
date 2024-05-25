@@ -25,8 +25,7 @@ def dropbox_download(link,string):
     else:
         print(f"Failed to retrieve the file. Status code: {response.status_code}")
 
-dropbox_download("https://www.dropbox.com/scl/fi/dlrfovoroyljqdketdcl9/1403.xlsx?rlkey=rk8p65pggu839rpupq39lz99z&st=cfucybw1&dl=0", "khordad")
-dropbox_download("https://www.dropbox.com/scl/fi/d1wux79gl92h9narou4xf/1403.xlsx?rlkey=sh5cljzhvpx2qcrhmln34vtwj&st=cajjrxlk&dl=0", "ordibehest")
+
 
 # Function to read and concatenate excel files
 def read_excel_files():
@@ -87,6 +86,8 @@ def plot_data(data_dict, title):
 
 # Streamlit app
 def main():
+    dropbox_download("https://www.dropbox.com/scl/fi/dlrfovoroyljqdketdcl9/1403.xlsx?rlkey=rk8p65pggu839rpupq39lz99z&st=cfucybw1&dl=0", "khordad")
+    dropbox_download("https://www.dropbox.com/scl/fi/d1wux79gl92h9narou4xf/1403.xlsx?rlkey=sh5cljzhvpx2qcrhmln34vtwj&st=cajjrxlk&dl=0", "ordibehest")
     st.title("XAV Coffee Works Report Generator")
 
     # User inputs for start and end date
