@@ -5,6 +5,7 @@ import random
 import os 
 import requests
 import openpyxl
+import altair as alt
 
 def dropbox_download(link,string):
     # Modify the link to allow direct access
@@ -81,12 +82,36 @@ def filter_and_clean_dataframe(df, date_list):
 # Function to plot data using Streamlit
 def plot_data(data_dict, title):
     data = pd.DataFrame(list(data_dict.items()), columns=["Category", "Value (kg)"])
-    st.subheader(title)
-    st.bar_chart(data.set_index("Category"))
+    # Randomize colors for bars from a list of nude colors
+    nude_colors = ['#f3e5ab', '#d7c4bb', '#f1c5b3', '#e0a899', '#c0b283', '#f5e4b3', '#f6d9d1', '#c8c2be']
+    data['Color'] = [random.choice(nude_colors) for _ in range(len(data))]
+    
+    # Create the bar chart using Altair
+    chart = alt.Chart(data).mark_bar().encode(
+        x=alt.X('Category', sort=None, axis=alt.Axis(labelAngle=-45)),
+        y='Value (kg)',
+        color=alt.Color('Color', scale=None)
+    ).properties(
+        title=title
+    )
 
+    # Add text labels for each bar
+    text = chart.mark_text(
+        align='center',
+        baseline='bottom',
+        dy=-10  # Adjust this value to move the text higher or lower
+    ).encode(
+        text='Value (kg)'
+    )
+    
+    # Combine the chart and text
+    final_chart = chart + text
+    
+    # Display the chart in Streamlit
+    st.altair_chart(final_chart, use_container_width=True)
 # Streamlit app
 def main():
-    dropbox_download("https://www.dropbox.com/scl/fi/0l42qezrzs5iv3lubknuw/1403.xlsx?rlkey=ozjqny5i5o5gi98u5l073pimc&st=2zq7r9tw&dl=0", "khordad")
+    dropbox_download("https://www.dropbox.com/scl/fi/dlrfovoroyljqdketdcl9/1403.xlsx?rlkey=rk8p65pggu839rpupq39lz99z&st=j7pje3xv&dl=0", "khordad")
     dropbox_download("https://www.dropbox.com/scl/fi/d1wux79gl92h9narou4xf/1403.xlsx?rlkey=sh5cljzhvpx2qcrhmln34vtwj&st=cajjrxlk&dl=0", "ordibehest")
     st.title("XAV Coffee Works Report Generator")
 
