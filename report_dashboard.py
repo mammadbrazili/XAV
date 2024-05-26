@@ -196,12 +196,18 @@ def main():
         plot_dict = {"X Series": x_series_sale, "A Series": a_series_sale, "V Series": v_series_sale, "Total": total_sale}
 
         # Displaying plots
-        plot_data(plot_dict, "فروش به تفکیک سری")
-        plot_data(v_dict, "V فروش سری")
-        plot_data(a_dict, "A فروش سری")
+        st.markdown("<h3><div style='font-family: xav semibold; direction: ltr;'>  فروش به تفکیک سری</div>", unsafe_allow_html=True)
+        plot_data(plot_dict, "")
+        st.markdown("<h3><div style='font-family: xav semibold; direction: ltr;'>   V فروش سری</div>", unsafe_allow_html=True)
+        plot_data(v_dict, "  ")
+        st.markdown("<h3><div style='font-family: xav semibold; direction: ltr;'>   A فروش سری</div>", unsafe_allow_html=True)
+        plot_data(a_dict, "        ")
+        st.markdown("<h3><div style='font-family: xav semibold; direction: ltr;'>  X فروش سری</div>", unsafe_allow_html=True)
         plot_data(x_dict, "X فروش سری")
-        plot_data(top_cafe_dict, " فروش ۱۰ کافه اول")
-        plot_data(top_city_dict, "فروش ۱۰ شهر اول")
+        st.markdown("<h3><div style='font-family: xav semibold; direction: ltr;'>فروش ۱۰ کافه اول</div>", unsafe_allow_html=True)
+        plot_data(top_cafe_dict, "            ")
+        st.markdown("<h3><div style='font-family: xav semibold; direction: ltr;'>فروش ۱۰ شهر اول</div>", unsafe_allow_html=True)
+        plot_data(top_city_dict, "           ")
     
 
 if __name__ == "__main__":
