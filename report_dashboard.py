@@ -30,9 +30,10 @@ def dropbox_download(link,string):
 
 # Function to read and concatenate excel files
 def read_excel_files():
-    df1 = pd.concat(pd.read_excel("ordibehest.xlsx", sheet_name=None), ignore_index=True)
-    df2 = pd.concat(pd.read_excel("khordad.xlsx",sheet_name=None),ignore_index=True)
-    df = pd.concat([df1, df2], ignore_index=True)
+    df1 = pd.concat(pd.read_excel("farvardin.xlsx", sheet_name=None), ignore_index=True)
+    df2 = pd.concat(pd.read_excel("ordibehesht.xlsx",sheet_name=None),ignore_index=True)
+    df3 = pd.concat(pd.read_excel("khordad.xlsx",sheet_name=None),ignore_index=True)
+    df = pd.concat([df1, df2,df3], ignore_index=True)
     return df
 
 # Function to clean the dataframe
@@ -109,10 +110,12 @@ def plot_data(data_dict, title):
     
     # Display the chart in Streamlit
     st.altair_chart(final_chart, use_container_width=True)
+
 # Streamlit app
 def main():
-    dropbox_download("https://www.dropbox.com/scl/fi/dlrfovoroyljqdketdcl9/1403.xlsx?rlkey=rk8p65pggu839rpupq39lz99z&st=j7pje3xv&dl=0", "khordad")
-    dropbox_download("https://www.dropbox.com/scl/fi/d1wux79gl92h9narou4xf/1403.xlsx?rlkey=sh5cljzhvpx2qcrhmln34vtwj&st=cajjrxlk&dl=0", "ordibehest")
+    dropbox_download("https://www.dropbox.com/scl/fi/0l42qezrzs5iv3lubknuw/1403.xlsx?rlkey=ozjqny5i5o5gi98u5l073pimc&st=wd266sn7&dl=0", "farvardin")
+    dropbox_download("https://www.dropbox.com/scl/fi/d1wux79gl92h9narou4xf/1403.xlsx?rlkey=sh5cljzhvpx2qcrhmln34vtwj&st=51jqslnt&dl=0", "ordibehesht")
+    dropbox_download("https://www.dropbox.com/scl/fi/dlrfovoroyljqdketdcl9/1403.xlsx?rlkey=rk8p65pggu839rpupq39lz99z&st=758nopyb&dl=0", "khordad")
     st.title("XAV Coffee Works Report Generator")
 
     # User inputs for start and end date
