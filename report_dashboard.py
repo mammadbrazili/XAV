@@ -12,7 +12,7 @@ import base64
 # Using XAV Type Face
 
 def load_black():
-    font_file_path = "/Users/mohammad/Library/Fonts/xav black.ttf"
+    font_file_path = "xav black.ttf"
     with open(font_file_path, "rb") as font_file:
         font_data = font_file.read()
     encoded_font = base64.b64encode(font_data).decode("utf-8")
@@ -20,7 +20,7 @@ def load_black():
     st.write('<style>{}</style>'.format(css), unsafe_allow_html=True)
 
 def load_bold():
-    font_file_path = "/Users/mohammad/Library/Fonts/xav semibold.ttf"
+    font_file_path = "xav semibold.ttf"
     with open(font_file_path, "rb") as font_file:
         font_data = font_file.read()
     encoded_font = base64.b64encode(font_data).decode("utf-8")
