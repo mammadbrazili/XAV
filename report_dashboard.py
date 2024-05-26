@@ -6,6 +6,26 @@ import os
 import requests
 import openpyxl
 import altair as alt
+import base64
+
+
+# Using XAV Type Face
+
+def load_black():
+    font_file_path = "/Users/mohammad/Library/Fonts/xav black.ttf"
+    with open(font_file_path, "rb") as font_file:
+        font_data = font_file.read()
+    encoded_font = base64.b64encode(font_data).decode("utf-8")
+    css = f"@font-face {{ font-family: 'xav black'; src: url('data:application/octet-stream;base64,{encoded_font}'); }}"
+    st.write('<style>{}</style>'.format(css), unsafe_allow_html=True)
+
+def load_bold():
+    font_file_path = "/Users/mohammad/Library/Fonts/xav semibold.ttf"
+    with open(font_file_path, "rb") as font_file:
+        font_data = font_file.read()
+    encoded_font = base64.b64encode(font_data).decode("utf-8")
+    css = f"@font-face {{ font-family: 'xav semibold'; src: url('data:application/octet-stream;base64,{encoded_font}'); }}"
+    st.write('<style>{}</style>'.format(css), unsafe_allow_html=True)
 
 def dropbox_download(link,string):
     # Modify the link to allow direct access
@@ -30,10 +50,9 @@ def dropbox_download(link,string):
 
 # Function to read and concatenate excel files
 def read_excel_files():
-    df1 = pd.concat(pd.read_excel("farvardin.xlsx", sheet_name=None), ignore_index=True)
-    df2 = pd.concat(pd.read_excel("ordibehesht.xlsx",sheet_name=None),ignore_index=True)
-    df3 = pd.concat(pd.read_excel("khordad.xlsx",sheet_name=None),ignore_index=True)
-    df = pd.concat([df1, df2,df3], ignore_index=True)
+    df1 = pd.concat(pd.read_excel("ordibehesht.xlsx",sheet_name=None),ignore_index=True)
+    df2 = pd.concat(pd.read_excel("khordad.xlsx",sheet_name=None),ignore_index=True)
+    df = pd.concat([df1, df2], ignore_index=True)
     return df
 
 # Function to clean the dataframe
@@ -82,15 +101,15 @@ def filter_and_clean_dataframe(df, date_list):
 
 # Function to plot data using Streamlit
 def plot_data(data_dict, title):
-    data = pd.DataFrame(list(data_dict.items()), columns=["Category", "Value (kg)"])
+    data = pd.DataFrame(list(data_dict.items()), columns=["دسته", "مقدار"])
     # Randomize colors for bars from a list of nude colors
     nude_colors = ['#f3e5ab', '#d7c4bb', '#f1c5b3', '#e0a899', '#c0b283', '#f5e4b3', '#f6d9d1', '#c8c2be']
     data['Color'] = [random.choice(nude_colors) for _ in range(len(data))]
     
     # Create the bar chart using Altair
     chart = alt.Chart(data).mark_bar().encode(
-        x=alt.X('Category', sort=None, axis=alt.Axis(labelAngle=-45)),
-        y='Value (kg)',
+        x=alt.X('دسته', sort=None, axis=alt.Axis(labelAngle=-45)),
+        y='مقدار',
         color=alt.Color('Color', scale=None)
     ).properties(
         title=title
@@ -102,7 +121,7 @@ def plot_data(data_dict, title):
         baseline='bottom',
         dy=-10  # Adjust this value to move the text higher or lower
     ).encode(
-        text='Value (kg)'
+        text='مقدار'
     )
     
     # Combine the chart and text
@@ -113,14 +132,19 @@ def plot_data(data_dict, title):
 
 # Streamlit app
 def main():
-    dropbox_download("https://www.dropbox.com/scl/fi/0l42qezrzs5iv3lubknuw/1403.xlsx?rlkey=ozjqny5i5o5gi98u5l073pimc&st=wd266sn7&dl=0", "farvardin")
-    dropbox_download("https://www.dropbox.com/scl/fi/d1wux79gl92h9narou4xf/1403.xlsx?rlkey=sh5cljzhvpx2qcrhmln34vtwj&st=51jqslnt&dl=0", "ordibehesht")
-    dropbox_download("https://www.dropbox.com/scl/fi/dlrfovoroyljqdketdcl9/1403.xlsx?rlkey=rk8p65pggu839rpupq39lz99z&st=758nopyb&dl=0", "khordad")
-    st.title("XAV Coffee Works Report Generator")
+    load_black()
+    load_bold()
+    dropbox_download("https://www.dropbox.com/scl/fi/d1wux79gl92h9narou4xf/1403.xlsx?rlkey=sh5cljzhvpx2qcrhmln34vtwj&st=sk2kb5s2&dl=0", "ordibehesht")
+    dropbox_download("https://www.dropbox.com/scl/fi/dlrfovoroyljqdketdcl9/1403.xlsx?rlkey=rk8p65pggu839rpupq39lz99z&st=kenx4ebp&dl=0", "khordad")
+
+
+    st.markdown("<h1 style='text-align: center; font-family: xav black;'>گزارش فروش دپارتمان درآمد</h3>", unsafe_allow_html=True)
 
     # User inputs for start and end date
-    start_date = st.text_input("Start date of report (YYYY/MM/DD):")
-    end_date = st.text_input("End date of report (YYYY/MM/DD):")
+    st.markdown("<h3><div style='font-family: xav semibold; direction: rtl;'> تاریخ شروع گزارش (فرمت برای مثال ۱۴۰۳/۲/۵)</div>", unsafe_allow_html=True)
+    start_date = st.text_input("")
+    st.markdown("<h3><div style='font-family: xav semibold; direction: rtl;'> تاریخ شروع گزارش (فرمت برای مثال ۱۴۰۳/۳/۵)</div>", unsafe_allow_html=True)
+    end_date = st.text_input(" ")
 
     if start_date and end_date:
         df = read_excel_files()
@@ -172,12 +196,12 @@ def main():
         plot_dict = {"X Series": x_series_sale, "A Series": a_series_sale, "V Series": v_series_sale, "Total": total_sale}
 
         # Displaying plots
-        plot_data(plot_dict, "Total Series Sale")
-        plot_data(v_dict, "V Series Sale")
-        plot_data(a_dict, "A Series Sale")
-        plot_data(x_dict, "X Series Sale")
-        plot_data(top_cafe_dict, "Top Cafes Sale")
-        plot_data(top_city_dict, "Top Cities Sale")
+        plot_data(plot_dict, "فروش به تفکیک سری")
+        plot_data(v_dict, "V فروش سری")
+        plot_data(a_dict, "A فروش سری")
+        plot_data(x_dict, "X فروش سری")
+        plot_data(top_cafe_dict, " فروش ۱۰ کافه اول")
+        plot_data(top_city_dict, "فروش ۱۰ شهر اول")
     
 
 if __name__ == "__main__":
