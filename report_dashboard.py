@@ -203,7 +203,7 @@ def main():
         st.markdown("<h5><div style='font-family: xav semibold; direction: ltr;'>   A فروش سری</div>", unsafe_allow_html=True)
         plot_data(a_dict, "        ")
         st.markdown("<h5><div style='font-family: xav semibold; direction: ltr;'>  X فروش سری</div>", unsafe_allow_html=True)
-        plot_data(x_dict, "X فروش سری")
+        plot_data(x_dict, "              ")
         st.markdown("<h5><div style='font-family: xav semibold; direction: ltr;'>فروش ۱۰ کافه اول</div>", unsafe_allow_html=True)
         plot_data(top_cafe_dict, "            ")
         st.markdown("<h5><div style='font-family: xav semibold; direction: ltr;'>فروش ۱۰ شهر اول</div>", unsafe_allow_html=True)
