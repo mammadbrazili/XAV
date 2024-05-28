@@ -7,6 +7,8 @@ import requests
 import openpyxl
 import altair as alt
 import base64
+from datetime import datetime, timedelta
+from convertdate import persian
 
 
 # Using XAV Type Face
@@ -77,18 +79,49 @@ def convert_date(string):
     return f"{year}/{month}/{day}"
 
 # Function to generate date list based on user input
+# def generate_date_list(start, end):
+    # start_day, start_month, year = int(start.split("/")[-1]), int(start.split("/")[-2]), int(start.split("/")[0])
+    # end_day, end_month = int(end.split("/")[-1]), int(end.split("/")[-2])
+    # date_list = []
+    # if start_day <= end_day:
+    #     for i in range(start_day, end_day + 1):
+    #         date_list.append(f"{year}/{start_month}/{i}")
+    # else:
+    #     for i in range(start_day, 32):
+    #         date_list.append(f"{year}/{start_month}/{i}")
+    #     for i in range(1, end_day + 1):
+    #         date_list.append(f"{year}/{end_month}/{i}")
+    # return date_list
+
+def persian_to_gregorian(year, month, day):
+    return persian.to_gregorian(year, month, day)
+
+def gregorian_to_persian(year, month, day):
+    return persian.from_gregorian(year, month, day)
+
 def generate_date_list(start, end):
-    start_day, start_month, year = int(start.split("/")[-1]), int(start.split("/")[-2]), int(start.split("/")[0])
-    end_day, end_month = int(end.split("/")[-1]), int(end.split("/")[-2])
+    # Split the input dates
+    start_year, start_month, start_day = map(int, start.split('/'))
+    end_year, end_month, end_day = map(int, end.split('/'))
+
+    # Convert Persian dates to Gregorian dates
+    start_gregorian = persian_to_gregorian(start_year, start_month, start_day)
+    end_gregorian = persian_to_gregorian(end_year, end_month, end_day)
+
+    # Convert tuples to datetime objects
+    start_date_gregorian = datetime(*start_gregorian)
+    end_date_gregorian = datetime(*end_gregorian)
+
+    # Generate date range
     date_list = []
-    if start_day <= end_day:
-        for i in range(start_day, end_day + 1):
-            date_list.append(f"{year}/{start_month}/{i}")
-    else:
-        for i in range(start_day, 32):
-            date_list.append(f"{year}/{start_month}/{i}")
-        for i in range(1, end_day + 1):
-            date_list.append(f"{year}/{end_month}/{i}")
+    current_date = start_date_gregorian
+    while current_date <= end_date_gregorian:
+        # Convert current Gregorian date to Persian date
+        persian_date = gregorian_to_persian(current_date.year, current_date.month, current_date.day)
+        date_list.append(f"{persian_date[0]}/{persian_date[1]}/{persian_date[2]}")
+        # Move to the next day
+        current_date += timedelta(days=1)
+
     return date_list
 
 # Function to clean the dataframe based on date list
