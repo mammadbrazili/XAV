@@ -9,6 +9,8 @@ import altair as alt
 import base64
 from datetime import datetime, timedelta
 from convertdate import persian
+from io import BytesIO
+
 
 
 # Using XAV Type Face
@@ -54,7 +56,9 @@ def dropbox_download(link,string):
 def read_excel_files():
     df1 = pd.concat(pd.read_excel("ordibehesht.xlsx",sheet_name=None),ignore_index=True)
     df2 = pd.concat(pd.read_excel("khordad.xlsx",sheet_name=None),ignore_index=True)
-    df = pd.concat([df1, df2], ignore_index=True)
+    df3 = pd.concat(pd.read_excel("farvardin.xlsx",sheet_name=None),ignore_index=True)
+
+    df = pd.concat([df1, df2,df3], ignore_index=True)
     return df
 
 # Function to clean the dataframe
@@ -78,20 +82,13 @@ def convert_date(string):
     year = splited[-1]
     return f"{year}/{month}/{day}"
 
-# Function to generate date list based on user input
-# def generate_date_list(start, end):
-    # start_day, start_month, year = int(start.split("/")[-1]), int(start.split("/")[-2]), int(start.split("/")[0])
-    # end_day, end_month = int(end.split("/")[-1]), int(end.split("/")[-2])
-    # date_list = []
-    # if start_day <= end_day:
-    #     for i in range(start_day, end_day + 1):
-    #         date_list.append(f"{year}/{start_month}/{i}")
-    # else:
-    #     for i in range(start_day, 32):
-    #         date_list.append(f"{year}/{start_month}/{i}")
-    #     for i in range(1, end_day + 1):
-    #         date_list.append(f"{year}/{end_month}/{i}")
-    # return date_list
+def to_excel(df):
+    output = BytesIO()
+    with pd.ExcelWriter(output, engine='openpyxl') as writer:
+        df.to_excel(writer, index=True, sheet_name='Sheet1')
+    processed_data = output.getvalue()
+    return processed_data
+
 
 def persian_to_gregorian(year, month, day):
     return persian.to_gregorian(year, month, day)
@@ -167,6 +164,7 @@ def plot_data(data_dict, title):
 def main():
     load_black()
     load_bold()
+    dropbox_download("https://www.dropbox.com/scl/fi/0l42qezrzs5iv3lubknuw/1403.xlsx?rlkey=ozjqny5i5o5gi98u5l073pimc&st=kuz4l70l&dl=0","farvardin")
     dropbox_download("https://www.dropbox.com/scl/fi/d1wux79gl92h9narou4xf/1403.xlsx?rlkey=sh5cljzhvpx2qcrhmln34vtwj&st=sk2kb5s2&dl=0", "ordibehesht")
     dropbox_download("https://www.dropbox.com/scl/fi/dlrfovoroyljqdketdcl9/1403.xlsx?rlkey=rk8p65pggu839rpupq39lz99z&st=kenx4ebp&dl=0", "khordad")
 
@@ -228,6 +226,35 @@ def main():
         x_series_sale = sum(x_dict.values())
         plot_dict = {"X Series": x_series_sale, "A Series": a_series_sale, "V Series": v_series_sale, "Total": total_sale}
 
+
+        ##  Creting Excel of cafes
+        dict_1 = {}
+        cafe_list = set(span_df["نام کافه"].to_list())
+        for i in cafe_list:
+            dict_1[i] = {}
+            sf = span_df[span_df["نام کافه"] == i]
+            for j in set(sf["نام محصول"].to_list()):
+                gf = sum(sf[sf["نام محصول"]== j]["واحد فرعی"].to_list())/1000
+                dict_1[i].update({j:gf})
+
+        cafe_df = pd.DataFrame(dict_1).T
+        cafe_df["Total"] = cafe_df.sum(axis=1)
+        cafe_df = cafe_df.sort_values(by='Total', ascending=False)
+
+        ##  Creting Excel of cities
+        dict_2 = {}
+        city_list = set(span_df["شهر"].to_list())
+        for i in city_list:
+            dict_2[i] = {}
+            sf = span_df[span_df["شهر"] == i]
+            for j in set(sf["نام محصول"].to_list()):
+                gf = sum(sf[sf["نام محصول"]== j]["واحد فرعی"].to_list())/1000
+                dict_2[i].update({j:gf})
+
+        city_df = pd.DataFrame(dict_2).T
+        city_df["Total"] = city_df.sum(axis=1)
+        city_df = city_df.sort_values(by='Total', ascending=False)
+
         # Displaying plots
         st.markdown("<h5><div style='font-family: xav semibold; direction: ltr;'>  فروش به تفکیک سری</div>", unsafe_allow_html=True)
         plot_data(plot_dict, "")
@@ -239,9 +266,24 @@ def main():
         plot_data(x_dict, "              ")
         st.markdown("<h5><div style='font-family: xav semibold; direction: ltr;'>فروش ۱۰ کافه اول</div>", unsafe_allow_html=True)
         plot_data(top_cafe_dict, "            ")
+            # Button to download the Excel file
+        excel_data = to_excel(cafe_df)
+        st.download_button(label='Download Excel',
+                        data=excel_data,
+                        file_name=f'cafe_sell_{start_date}_{end_date}.xlsx',
+                        mime='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')
+
         st.markdown("<h5><div style='font-family: xav semibold; direction: ltr;'>فروش ۱۰ شهر اول</div>", unsafe_allow_html=True)
         plot_data(top_city_dict, "           ")
-    
+        excel_data = to_excel(city_df)
+        st.download_button(label='Download Excel',
+                        data=excel_data,
+                        file_name=f'city_sell_{start_date}_{end_date}.xlsx',
+                        mime='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')
+
+
+
+
 
 if __name__ == "__main__":
     main()
