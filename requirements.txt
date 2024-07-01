@@ -5,4 +5,4 @@ numpy
 openpyxl
 requests
 convertdate
-io
+pip
