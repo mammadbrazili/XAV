@@ -62,7 +62,6 @@ st.write("----------------------------------------------------------------------
 st.markdown("<h2><div style='font-family: xav semibold; direction: ltr;'>نحوه ارائه قهوه تخصصی</div>", unsafe_allow_html=True)
 q4_1 = st.checkbox("ارزش گذاری", key="q4_1")
 q4_2 = st.checkbox("نحوه پرزنت", key="q4_2")
-st.write("------------------------------------------------------------------------------------------------------")
 
 # Define the scores for each question
 scores = {
