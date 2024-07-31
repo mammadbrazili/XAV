@@ -2,11 +2,6 @@ import streamlit as st
 import streamlit as st
 import pandas as pd
 import streamlit as st
-import random
-import os 
-import requests
-import openpyxl
-import altair as alt
 import base64
 from io import BytesIO
 
