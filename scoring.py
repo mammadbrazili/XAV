@@ -8,8 +8,6 @@ import requests
 import openpyxl
 import altair as alt
 import base64
-from datetime import datetime, timedelta
-from convertdate import persian
 from io import BytesIO
 
 
