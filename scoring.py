@@ -58,10 +58,10 @@ q4_2 = st.checkbox("نحوه پرزنت", key="q4_2")
 
 # Define the scores for each question
 scores = {
-    "q1_1": 20, "q1_2": 20, "q1_3": 5,
-    "q2_1": 15, "q2_2": 15, "q2_3": 5,
-    "q3_1": 8, "q3_2": 7, "q3_3": 5,
-    "q4_1": 6, "q4_2": 4
+    "q1_1": 47, "q1_2": 47, "q1_3": 6,
+    "q2_1": 35, "q2_2": 35, "q2_3": 6,
+    "q3_1": 18, "q3_2": 61, "q3_3": 16,
+    "q4_1": 18, "q4_2": 11
 }
 
 # Calculate the total score based on selected checkboxes
@@ -89,7 +89,7 @@ if q4_1:
 if q4_2:
     total_score += scores["q4_2"]
 
-total_score = int(total_score/11*10)
+total_score = int(total_score/3)
 
 # Display the total score when the submit button is clicked
 if st.button("ارسال"):
@@ -98,7 +98,7 @@ if st.button("ارسال"):
         st.write(f"امتیاز کل: {total_score} ")
         st.write("V Series Cafe")
         
-    elif total_score > 50 and total_score<80  :
+    elif total_score > 50 and total_score<=80  :
         st.write(f"امتیاز کل: {total_score} ")
         st.write("A Series Cafe")
         
