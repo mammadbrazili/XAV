@@ -60,8 +60,9 @@ def read_excel_files():
     df4 = pd.concat(pd.read_excel("tir.xlsx",sheet_name=None),ignore_index=True)
     df5 = pd.concat(pd.read_excel("mordad.xlsx",sheet_name=None),ignore_index=True)
     df6 = pd.concat(pd.read_excel("shahrivar.xlsx",sheet_name=None),ignore_index=True)
+    df7 = pd.concat(pd.read_excel("mehr.xlsx",sheet_name=None),ignore_index=True)
 
-    df = pd.concat([df1, df2,df3,df4,df5,df6], ignore_index=True)
+    df = pd.concat([df1, df2,df3,df4,df5,df6,df7], ignore_index=True)
     return df
 
 # Function to clean the dataframe
@@ -79,8 +80,8 @@ def clean_dataframe(df):
 # Function to convert date
 def convert_date(string):
     splited = string.split(" ")
-    day = splited[-3]
-    month_string = splited[-2]
+    day = splited[1]
+    month_string = splited[2]
     month = {"فروردین": 1, "اردیبهشت": 2, "خرداد": 3, "تیر": 4, "مرداد": 5, "شهریور": 6, "مهر": 7, "آبان": 8, "آذر": 9, "دی": 10, "بهمن": 11, "اسفند": 12}[month_string]
     year = splited[-1]
     return f"{year}/{month}/{day}"
@@ -173,6 +174,7 @@ def main():
     dropbox_download("https://www.dropbox.com/scl/fi/yjnjon3k3r4fl1relw87j/1403.xlsx?rlkey=wrquyyhzs2i5hxp3q3zdyphmq&st=vqv9i4yv&dl=0", "tir")
     dropbox_download("https://www.dropbox.com/scl/fi/vu2zxeffm2r0l2f2pf2uw/1403.xlsx?rlkey=8zbjli5ch1zkuqvq6epcewhio&st=5pfoj1ks&dl=0", "mordad")
     dropbox_download("https://www.dropbox.com/scl/fi/goyz8jm434e6o7eqy6r0j/1403.xlsx?rlkey=wzqdsttd6w7krpaj7vc8yhfux&st=x3hokyoz&dl=0", "shahrivar")
+    dropbox_download("https://www.dropbox.com/scl/fi/6yezi5iskl8ggzwrq7q5v/1403.xlsx?rlkey=qd0wsandqgnxy69o5nkn1m130&st=amdwdxjj&dl=0", "mehr")
 
     st.markdown("<h1 style='text-align: center; font-family: xav black;'>گزارش فروش دپارتمان درآمد</h3>", unsafe_allow_html=True)
 
