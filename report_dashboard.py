@@ -125,6 +125,7 @@ def generate_date_list(start, end):
 
     return date_list
 
+
 # Function to clean the dataframe based on date list
 def filter_and_clean_dataframe(df, date_list):
     span_df = df[df["تاریخ سفارش"].isin(date_list)]
