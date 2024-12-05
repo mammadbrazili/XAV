@@ -62,7 +62,8 @@ def read_excel_files():
     df6 = pd.concat(pd.read_excel("shahrivar.xlsx",sheet_name=None),ignore_index=True)
     df7 = pd.concat(pd.read_excel("mehr.xlsx",sheet_name=None),ignore_index=True)
     df8 = pd.concat(pd.read_excel("aban.xlsx",sheet_name=None),ignore_index=True)
-    df = pd.concat([df1, df2,df3,df4,df5,df6,df7,df8], ignore_index=True)
+    df9 = pd.concat(pd.read_excel("azar.xlsx",sheet_name=None),ignore_index=True)
+    df = pd.concat([df1, df2,df3,df4,df5,df6,df7,df8,df9], ignore_index=True)
     return df
 
 # Function to clean the dataframe
@@ -177,7 +178,7 @@ def main():
     dropbox_download("https://www.dropbox.com/scl/fi/goyz8jm434e6o7eqy6r0j/1403.xlsx?rlkey=wzqdsttd6w7krpaj7vc8yhfux&st=x3hokyoz&dl=0", "shahrivar")
     dropbox_download("https://www.dropbox.com/scl/fi/6yezi5iskl8ggzwrq7q5v/1403.xlsx?rlkey=qd0wsandqgnxy69o5nkn1m130&st=amdwdxjj&dl=0", "mehr")
     dropbox_download("https://www.dropbox.com/scl/fi/on42hgn533zz6ac6tciri/1403.xlsx?rlkey=0w6po41ttkzt38zmdx53e5629&st=5k6bkiaz&dl=0", "aban")
-
+    dropbox_download("https://www.dropbox.com/scl/fi/og29qfw2dqyv4si592ytu/1403.xlsx?rlkey=aqmlmoxyxq3eam6b8nwrpa6wz&st=fynwvjpr&dl=0", "azar")
     st.markdown("<h1 style='text-align: center; font-family: xav black;'>گزارش فروش دپارتمان درآمد</h3>", unsafe_allow_html=True)
 
     # User inputs for start and end date
